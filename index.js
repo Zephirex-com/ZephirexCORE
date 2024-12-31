@@ -1,6 +1,7 @@
-//const { CBAdvancedTradeClient } = require('coinbase-api');
+// index.js
 
 import { CBAdvancedTradeClient, WebsocketClient } from 'coinbase-api';
+import { marketPairs } from 'marketPairs';
 /**
  * Or, with import:
  * import { CBAdvancedTradeClient } from 'coinbase-api';
@@ -36,6 +37,11 @@ async function getBalances() {
 
 getBalances();
 
+// Assemble pairs
+for (marketPairs) as market (){
+  
+}
+
 const websocket = new WebsocketClient({
     // Either pass the full JSON object that can be downloaded when creating your API keys
     // cdpApiKey: advancedTradeCdpAPIKey,
@@ -53,8 +59,18 @@ const websocket = new WebsocketClient({
   
   // Data received
   websocket.on('update', (data) => {
-    console.info(new Date(), 'data received: ', JSON.stringify(data));
-    
+
+    const jsondata = JSON.stringify(data);
+
+    // Data handler here <<<--------------------------------------------------------
+    console.info(new Date(), 'data received: ', jsondata);
+
+    // Ticker handler:
+    if(jsondata.channel == "ticker"){
+
+    }
+
+
   });
   
   // Something happened, attempting to reconenct
