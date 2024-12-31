@@ -1,7 +1,7 @@
 // Included pairs to scan for
 
-const marketPairs = {
+const marketPairs = [
     'SHIB-USD'
-};
+];
 
 module.exports = marketPairs;

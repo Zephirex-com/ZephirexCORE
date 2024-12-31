@@ -38,9 +38,7 @@ async function getBalances() {
 getBalances();
 
 // Assemble pairs
-for (marketPairs) as market (){
-  
-}
+
 
 const websocket = new WebsocketClient({
     // Either pass the full JSON object that can be downloaded when creating your API keys
