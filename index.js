@@ -1,7 +1,7 @@
 // index.js
 
 import { CBAdvancedTradeClient, WebsocketClient } from 'coinbase-api';
-import { marketPairs } from 'marketPairs';
+import { marketPairs } from './marketPairs.js';
 /**
  * Or, with import:
  * import { CBAdvancedTradeClient } from 'coinbase-api';
@@ -38,6 +38,7 @@ async function getBalances() {
 getBalances();
 
 // Assemble pairs
+
 
 
 const websocket = new WebsocketClient({
@@ -126,7 +127,7 @@ const websocket = new WebsocketClient({
      * allowing you to send misc parameters supported by the exchange (such as `product_ids: string[]`)
      */
     payload: {
-      product_ids: [/*'ETH-USD', 'BTC-USD',*/ 'SHIB-USD'],
+      product_ids: marketPairs,
     },
   };
   websocket.subscribe(tickerSubscribeRequest, 'advTradeMarketData');
@@ -163,11 +164,11 @@ const websocket = new WebsocketClient({
       {
         topic: 'level2',
         payload: {
-          product_ids: ['SHIB-USD'],
+          product_ids: marketPairs,
         },
         topic: 'status',
         payload: {
-        product_ids: ['SHIB-USD'],
+        product_ids: marketPairs,
         },
       },
     ],
