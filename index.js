@@ -2,6 +2,8 @@
 
 import { CBAdvancedTradeClient, WebsocketClient } from 'coinbase-api';
 import { marketPairs } from './marketPairs.js';
+import { assembler } from './assembler.js';
+
 /**
  * Or, with import:
  * import { CBAdvancedTradeClient } from 'coinbase-api';
@@ -38,8 +40,7 @@ async function getBalances() {
 getBalances();
 
 // Assemble pairs
-
-
+assembler();
 
 const websocket = new WebsocketClient({
     // Either pass the full JSON object that can be downloaded when creating your API keys
