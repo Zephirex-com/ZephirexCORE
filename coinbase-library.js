@@ -8,9 +8,9 @@ import { CBAdvancedTradeClient } from 'coinbase-api';
 
 // insert your API key details here from Coinbase API Key Management
 const advancedTradeCdpAPIKey = {
-    name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/2a6952de-150a-4ccb-b0c4-ea4ab89ddcdd",
-    privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIGC7o33tEPYzYlEL237VYd3mYh55Wa9ju69+FriXaBzooAoGCCqGSM49\nAwEHoUQDQgAEpvMF/zo3VcgmXWCH62npEmqzsVh6FnN8PoUkC6tL68mF85ibt9es\n+DSD782ca6nmO4j+NDlwRy4B4EXhcAviWA==\n-----END EC PRIVATE KEY-----\n"
- };
+  name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/852e1603-9c23-45d1-aa85-e5443e321422",
+  privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEID1+lKqvfk4zBEX8XejPsR8tAw0Eim42WIHAa9H1jCEnoAoGCCqGSM49\nAwEHoUQDQgAEIP2I0XxcvPfdT5CX5qHFEJdIqdE1fWIKkTyxBoaj5SkHrIlAj8q7\nGefa5J5cyLAvKC85IRJjoKc06SgoGMT86g==\n-----END EC PRIVATE KEY-----\n"
+};
 
 const client = new CBAdvancedTradeClient({
   // Either pass the full JSON object that can be downloaded when creating your API keys
