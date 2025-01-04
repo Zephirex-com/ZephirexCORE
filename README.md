@@ -4,4 +4,4 @@ Description: Automated trading algorithm for use in the Coinbase Advanced Tradin
 
 ### Install
 
-You want to use this git and install into your Node.js environment
+You want to use this git and install into your Node.js environment. NPM implementation will come soon.
