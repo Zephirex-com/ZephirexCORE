@@ -10,4 +10,4 @@ export const balances = {};
 
 export const price_data = {};
 
-export const extras = {};
+export const extras = [];
