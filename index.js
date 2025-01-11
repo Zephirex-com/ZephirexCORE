@@ -1,16 +1,18 @@
 // index.js
 
-import { CBAdvancedTradeClient, WebsocketClient } from 'coinbase-api';
-import { marketPairs } from './config.js';
+import { WebsocketClient } from 'coinbase-api';
+import { marketPairs, markets, price_data } from './config.js';
 import { assembler } from './assembler.js';
-import { advancedTradeCdpAPIKey, client } from './coinbase-library.js';
+import { advancedTradeCdpAPIKey } from './coinbase-library.js';
 import { mapBalances } from './mapBalances.js';
 import { getBalances } from './getBalances.js';
 import { checkMarketStatus } from './checkMarkteStatus.js';
+import { tradeLogic } from './zephirex.js';
 
 const balances = await getBalances({limit:100});
+console.log("Balances: ", balances);
 
-// Map the balances to the accounts variable in ./config.js
+// Map the balances to the Global accounts variable in ./config.js
 mapBalances(balances.accounts);
 
 // Assemble pairs
@@ -33,12 +35,54 @@ const websocket = new WebsocketClient({
   
   // Data received
   websocket.on('update', (data) => {
-    console.log('update: ', JSON.stringify(data, null, 2));
+    // console.log('update: ', JSON.stringify(data, null, 2));
     switch (data.channel) {
       case 'status':
                 
-        // Obtain market STATUS info about min market funds, and base and quote increments.
+        // Update market STATUS info about min market funds, and base and quote increments.
         checkMarketStatus(data.events[0].products[0]);
+        break;
+      
+      case 'ticker':
+
+        // Identify product ID first
+        let ticker = data.events[0].tickers[0];
+        let pair = ticker.product_id;
+        let bestAsk = ticker.best_ask;
+        let bestBid = ticker.best_bid;
+
+        // Update best_bid and best_ask for the corresponding market
+        markets[pair].best_bid.price_level = bestBid;
+        markets[pair].best_ask.price_level = bestAsk;
+        markets[pair].best_bid.new_quantity = ticker.best_bid_quantity;
+        markets[pair].best_ask.new_quantity = ticker.best_ask_quantity;
+
+        price_data[pair] = {
+          bid: bestBid,
+          ask: bestAsk,
+        }
+
+        // If market not ready...
+        if (
+          markets[pair] &&
+          markets[pair].base_increment != null &&
+          markets[pair].best_bid != null &&
+          markets[pair].best_ask != null
+        ) {
+          tradeLogic(markets[pair], bestAsk, bestBid);
+        } else {
+          console.log(
+            'Condition not met for pair:',
+            pair,
+            'Base Increment:',
+            markets[pair].base_increment,
+            'Best Bid:',
+            bestBid,
+            'Best Ask:',
+            bestAsk
+          );
+        }
+        break; 
     }
   });
   

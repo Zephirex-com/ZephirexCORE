@@ -8,6 +8,14 @@ export class market {
         this.name = baseName + "-" + quoteName;
         this.baseName = baseName;
         this.quoteName = quoteName;
+        this.best_ask = {
+            price_level : 0,
+            new_quantity : 0,
+        }
+        this.best_bid = {
+            price_level : 0,
+            new_quantity : 0,
+        }
         this.ask = Infinity;
         this.bid = -Infinity;
         this.quoteName_USD = quoteName + "-USD";
@@ -48,9 +56,9 @@ export class market {
                     "product_id": String(this.name),
                     "side": String(side),
                     "order_configuration": {
-                    "market_market_ioc": {
-                        "base_size": base_size.toString(), // Base is the quantity for selling ETH in ETH-USD for USD
-                    }
+                        "market_market_ioc": {
+                            "base_size": base_size.toString(), // Base is the quantity for selling ETH in ETH-USD for USD
+                        }
                     }
                 };
             }else{
@@ -59,15 +67,15 @@ export class market {
                     "product_id": String(this.name),
                     "side": String(side),
                     "order_configuration": {
-                    "market_market_ioc": {
-                        "quote_size": quote_size.toString(), // Quote is the value for buying ETH in ETH-USD with USD
-                    }
+                        "market_market_ioc": {
+                            "quote_size": quote_size.toString(), // Quote is the value for buying ETH in ETH-USD with USD
+                        }
                     }
                 };
             }
 
             // Confirm details of event
-            console.log( "Order details: ", orderDetails );
+            console.log( "Order details: 💱💲 ", orderDetails );
             client.submitOrder(orderDetails)
                 .then((response) => {
                     console.log(response);
@@ -76,7 +84,7 @@ export class market {
                     console.error(error);
                 });
 
-            // Update balances accordingly <---------------------- Must update!!!!
+            // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
             accounts[this.name].acquisition += 0; 
 
             // Re-enable pair
@@ -89,6 +97,10 @@ export class market {
             this.tempLowestAsk = Infinity;
             this.highestBid = Infinity;
             this.tempHighestBid = -Infinity;
+        }
+
+        this.report = function(){
+            //console.log ("Report generated for... ", this.name);
         }
     }
 }

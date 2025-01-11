@@ -1,4 +1,4 @@
-// checkMarketStatus.js
+// checkMarketStatus.js - Updates market status variables like base and quote increments and min market funds
 
 import { markets } from './config.js';
 
