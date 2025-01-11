@@ -11,9 +11,9 @@ import { assembler } from './assembler.js';
 
 // insert your API key details here from Coinbase API Key Management
 const advancedTradeCdpAPIKey = {
-    name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/2a6952de-150a-4ccb-b0c4-ea4ab89ddcdd",
-    privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIGC7o33tEPYzYlEL237VYd3mYh55Wa9ju69+FriXaBzooAoGCCqGSM49\nAwEHoUQDQgAEpvMF/zo3VcgmXWCH62npEmqzsVh6FnN8PoUkC6tL68mF85ibt9es\n+DSD782ca6nmO4j+NDlwRy4B4EXhcAviWA==\n-----END EC PRIVATE KEY-----\n"
- };
+  name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/02cc536f-3bf5-411c-94b6-f5df6ea7277f",
+  privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIsvKk999pF7/MmhYjEp9cJVY4DzHWEOjURzJbdCU9a6oAoGCCqGSM49\nAwEHoUQDQgAEmW94HIATamedFE3B2WAgu55nsAFz8RV8igKVT1cqhYUwCBtqYKNr\nyPK3XIzrdVh50hIYC+zm/eVHABjqyq9wSw==\n-----END EC PRIVATE KEY-----\n"
+};
 
 const client = new CBAdvancedTradeClient({
   // Either pass the full JSON object that can be downloaded when creating your API keys
@@ -24,23 +24,20 @@ const client = new CBAdvancedTradeClient({
   apiSecret: advancedTradeCdpAPIKey.privateKey,
 });
 
-async function getBalances() {
+async function doAPICall() {
   // Example usage of the CBAdvancedTradeClient
   try {
     const accounts = await client.getAccounts();
-
-    // Balances loaded here <<<---------------------------------------------------------
     console.log('Get accounts result: ', accounts);
-
   } catch (e) {
     console.error('Exception: ', JSON.stringify(e));
   }
 }
 
-getBalances();
+doAPICall();
 
 // Assemble pairs
-assembler();
+// assembler();
 
 const websocket = new WebsocketClient({
     // Either pass the full JSON object that can be downloaded when creating your API keys
@@ -59,18 +56,7 @@ const websocket = new WebsocketClient({
   
   // Data received
   websocket.on('update', (data) => {
-
-    const jsondata = JSON.stringify(data);
-
-    // Data handler here <<<--------------------------------------------------------
-    console.info(new Date(), 'data received: ', jsondata);
-
-    // Ticker handler:
-    if(jsondata.channel == "ticker"){
-
-    }
-
-
+    // console.log('update: ', JSON.stringify(data, null, 2));
   });
   
   // Something happened, attempting to reconenct
@@ -90,7 +76,7 @@ const websocket = new WebsocketClient({
   
   // Reply to a request, e.g. "subscribe"/"unsubscribe"/"authenticate"
   websocket.on('response', (data) => {
-    console.info('response: ', JSON.stringify(data, null, 2));
+    // console.info('response: ', JSON.stringify(data, null, 2));
     // throw new Error('res?');
     
   });
@@ -115,8 +101,8 @@ const websocket = new WebsocketClient({
   // client.subscribe('heartbeats', WS_KEY_MAP.advTradeMarketData);
   
   // user data
-  websocket.subscribe('futures_balance_summary', 'advTradeUserData');
-  // websocket.subscribe('user', 'advTradeUserData');
+  // websocket.subscribe('futures_balance_summary', 'advTradeUserData');
+  websocket.subscribe('user', 'advTradeUserData');
   
   /**
    * Or send a more structured object with parameters, e.g. if parameters are required
