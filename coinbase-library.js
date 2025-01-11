@@ -1,18 +1,14 @@
 //const { CBAdvancedTradeClient } = require('coinbase-api');
 
 import { CBAdvancedTradeClient } from 'coinbase-api';
-/**
- * Or, with import:
- * import { CBAdvancedTradeClient } from 'coinbase-api';
- */
 
 // insert your API key details here from Coinbase API Key Management
-const advancedTradeCdpAPIKey = {
-    name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/2a6952de-150a-4ccb-b0c4-ea4ab89ddcdd",
-    privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIGC7o33tEPYzYlEL237VYd3mYh55Wa9ju69+FriXaBzooAoGCCqGSM49\nAwEHoUQDQgAEpvMF/zo3VcgmXWCH62npEmqzsVh6FnN8PoUkC6tL68mF85ibt9es\n+DSD782ca6nmO4j+NDlwRy4B4EXhcAviWA==\n-----END EC PRIVATE KEY-----\n"
- };
+export const advancedTradeCdpAPIKey = {
+  name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/02cc536f-3bf5-411c-94b6-f5df6ea7277f",
+  privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIsvKk999pF7/MmhYjEp9cJVY4DzHWEOjURzJbdCU9a6oAoGCCqGSM49\nAwEHoUQDQgAEmW94HIATamedFE3B2WAgu55nsAFz8RV8igKVT1cqhYUwCBtqYKNr\nyPK3XIzrdVh50hIYC+zm/eVHABjqyq9wSw==\n-----END EC PRIVATE KEY-----\n"
+};
 
-const client = new CBAdvancedTradeClient({
+export const client = new CBAdvancedTradeClient({
   // Either pass the full JSON object that can be downloaded when creating your API keys
   // cdpApiKey: advancedTradeCdpAPIKey,
 
@@ -20,15 +16,3 @@ const client = new CBAdvancedTradeClient({
   apiKey: advancedTradeCdpAPIKey.name,
   apiSecret: advancedTradeCdpAPIKey.privateKey,
 });
-
-async function doAPICall() {
-  // Example usage of the CBAdvancedTradeClient
-  try {
-    const accounts = await client.getAccounts();
-    console.log('Get accounts result: ', accounts);
-  } catch (e) {
-    console.error('Exception: ', JSON.stringify(e));
-  }
-}
-
-doAPICall();

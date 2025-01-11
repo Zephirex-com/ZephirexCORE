@@ -1,11 +1,11 @@
-// Assembler.js
+// Assembler.js This assembles the markets
 
 import { marketPairs, price_data, extras, markets } from './config.js';
 import { market } from './market.js';
 
 export function assembler(){
     // Iterate through markets
-    for (let pair in marketPairs){
+    for (let pair of marketPairs){
         let name = pair;
         let base = pair.split("-")[0];  // Base currency
         let quote = pair.split("-")[1]; // Need quote to account for USD pairs

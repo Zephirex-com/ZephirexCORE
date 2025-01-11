@@ -2,12 +2,14 @@
 
 export const marketPairs = [
     "SHIB-USD",
+    "BTC-USD",
+    "ETH-USD",
 ];
 
-export const markets = {}; 
+export const extras = [];
 
-export const balances = {};
+export const markets = {}; // This holds all the market objects
+
+export const accounts = {};
 
 export const price_data = {};
-
-export const extras = [];

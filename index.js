@@ -1,43 +1,20 @@
 // index.js
 
 import { CBAdvancedTradeClient, WebsocketClient } from 'coinbase-api';
-import { marketPairs } from './marketPairs.js';
+import { marketPairs } from './config.js';
 import { assembler } from './assembler.js';
+import { advancedTradeCdpAPIKey, client } from './coinbase-library.js';
+import { mapBalances } from './mapBalances.js';
+import { getBalances } from './getBalances.js';
+import { checkMarketStatus } from './checkMarkteStatus.js';
 
-/**
- * Or, with import:
- * import { CBAdvancedTradeClient } from 'coinbase-api';
- */
+const balances = await getBalances({limit:100});
 
-// insert your API key details here from Coinbase API Key Management
-const advancedTradeCdpAPIKey = {
-  name: "organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/02cc536f-3bf5-411c-94b6-f5df6ea7277f",
-  privateKey: "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIsvKk999pF7/MmhYjEp9cJVY4DzHWEOjURzJbdCU9a6oAoGCCqGSM49\nAwEHoUQDQgAEmW94HIATamedFE3B2WAgu55nsAFz8RV8igKVT1cqhYUwCBtqYKNr\nyPK3XIzrdVh50hIYC+zm/eVHABjqyq9wSw==\n-----END EC PRIVATE KEY-----\n"
-};
-
-const client = new CBAdvancedTradeClient({
-  // Either pass the full JSON object that can be downloaded when creating your API keys
-  // cdpApiKey: advancedTradeCdpAPIKey,
-
-  // Or use the key name as "apiKey" and private key (WITH the "begin/end EC PRIVATE KEY" comment) as "apiSecret"
-  apiKey: advancedTradeCdpAPIKey.name,
-  apiSecret: advancedTradeCdpAPIKey.privateKey,
-});
-
-async function doAPICall() {
-  // Example usage of the CBAdvancedTradeClient
-  try {
-    const accounts = await client.getAccounts();
-    console.log('Get accounts result: ', accounts);
-  } catch (e) {
-    console.error('Exception: ', JSON.stringify(e));
-  }
-}
-
-doAPICall();
+// Map the balances to the accounts variable in ./config.js
+mapBalances(balances.accounts);
 
 // Assemble pairs
-// assembler();
+assembler();
 
 const websocket = new WebsocketClient({
     // Either pass the full JSON object that can be downloaded when creating your API keys
@@ -56,7 +33,13 @@ const websocket = new WebsocketClient({
   
   // Data received
   websocket.on('update', (data) => {
-    // console.log('update: ', JSON.stringify(data, null, 2));
+    console.log('update: ', JSON.stringify(data, null, 2));
+    switch (data.channel) {
+      case 'status':
+                
+        // Obtain market STATUS info about min market funds, and base and quote increments.
+        checkMarketStatus(data.events[0].products[0]);
+    }
   });
   
   // Something happened, attempting to reconenct
@@ -102,7 +85,7 @@ const websocket = new WebsocketClient({
   
   // user data
   // websocket.subscribe('futures_balance_summary', 'advTradeUserData');
-  websocket.subscribe('user', 'advTradeUserData');
+  // websocket.subscribe('user', 'advTradeUserData');
   
   /**
    * Or send a more structured object with parameters, e.g. if parameters are required
