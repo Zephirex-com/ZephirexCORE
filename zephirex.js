@@ -35,13 +35,14 @@ function buy(pair, marketPair) {
     const available = Number.parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
 
     // Define Quote size for buying i.e. USD
-    const quote_size = matchDecimals(marketPair.quote_increment, Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential));
+    const quote_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
 
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_ask * best_quantity;
 
     // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
-    const readyValue = quote_size - accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
+    let readyValue = quote_size - accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
+    readyValue = matchDecimals(marketPair.quote_increment, readyValue)
 
     console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
@@ -63,13 +64,14 @@ function sell(pair, marketPair) {
     const available = parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
 
     // Define Base size for buying i.e. SHIB
-    const base_size = matchDecimals(marketPair.base_increment, Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential));
+    const base_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
 
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_bid * best_quantity;
 
     // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
-    const readyValue = (base_size - accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
+    let readyValue = (base_size - accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
+    readyValue = matchDecimals(marketPair.base_increment, readyValue); // Ready to proper decimal count
 
     console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
