@@ -43,7 +43,7 @@ function buy(pair, marketPair) {
     // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
     const readyValue = quote_size - accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
 
-    console.log("🔵", pair, "OMV:", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", (readyValue / marketPair.min_market_funds) * 100,"%"); // All in quote units!
+    console.log("🔵", pair, "OMV:", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", (readyValue / marketPair.min_market_funds).toFixed(8) * 100,"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         console.log("Market trade conditions are met!");
         marketPair.disable();
@@ -71,7 +71,7 @@ function sell(pair, marketPair) {
     // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
     const readyValue = (base_size - accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
 
-    console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", (readyValue / marketPair.min_market_funds) * 100,"%"); // All in quote units!
+    console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", (readyValue / marketPair.min_market_funds).toFixed(8) * 100,"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         console.log("Market trade conditions are met!");
         marketPair.disable();
