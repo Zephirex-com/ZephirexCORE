@@ -16,7 +16,7 @@ export const accounts = {};
 export const price_data = {};
 
 export const config = {
-    xFactor: 5.75, // Risk factor 0 to 0.85 = less risk
+    xFactor: 50, // Risk factor 0 to 0.85 = less risk
     fee: 0.007,
     volumeDifferential: 1, // This is for use with TTVE
 }
