@@ -8,5 +8,5 @@ You want to use this git and install into your Node.js environment. NPM implemen
 
 ### Dependencies
 
-- https://github.com/tiagosiebler/coinbase-api/tree/master
+- https://github.com/tiagosiebler/coinbase-api/
 - That's about it, you'll need your advanced trading API keys from Coinbase
