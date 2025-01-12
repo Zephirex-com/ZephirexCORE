@@ -1,6 +1,7 @@
 // market.js
 
 import { client } from './coinbase-library.js';
+import { accounts } from './config.js';
 
 export class market {
     constructor(baseName, quoteName){
@@ -52,7 +53,7 @@ export class market {
             // Set data for a market order
             if(side === "SELL"){
                 orderDetails = {
-                    "client_order_id": generateClientOrderId(),
+                    "client_order_id": "cbnode"+generateClientOrderId(),
                     "product_id": String(this.name),
                     "side": String(side),
                     "order_configuration": {
@@ -63,7 +64,7 @@ export class market {
                 };
             }else{
                 orderDetails = {
-                    "client_order_id": generateClientOrderId(),
+                    "client_order_id": "cbnode"+generateClientOrderId(),
                     "product_id": String(this.name),
                     "side": String(side),
                     "order_configuration": {
