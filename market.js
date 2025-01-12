@@ -1,7 +1,7 @@
 // market.js
 
 import { client } from './coinbase-library.js';
-import { accounts } from './config.js';
+import { config, accounts } from './config.js';
 
 export class market {
     constructor(baseName, quoteName){
@@ -17,8 +17,6 @@ export class market {
             price_level : 0,
             new_quantity : 0,
         }
-        this.ask = Infinity;
-        this.bid = -Infinity;
         this.quoteName_USD = quoteName + "-USD";
         this.last_price = 0;
         this.spentBaseBalance = 0;
@@ -51,56 +49,64 @@ export class market {
             let orderDetails = {};
 
             // Set data for a market order
+            orderDetails = {
+                "client_order_id": "cbnode"+generateClientOrderId(),
+                "product_id": String(this.name),
+                "side": String(side),
+                "order_configuration": {
+                    "market_market_ioc": {}
+                }
+            }
             if(side === "SELL"){
-                orderDetails = {
-                    "client_order_id": "cbnode"+generateClientOrderId(),
-                    "product_id": String(this.name),
-                    "side": String(side),
-                    "order_configuration": {
-                        "market_market_ioc": {
-                            "base_size": base_size.toString(), // Base is the quantity for selling ETH in ETH-USD for USD
-                        }
-                    }
-                };
+                orderDetails.order_configuration.market_market_ioc.base_size = base_size.toString(); // Base is the quantity for selling ETH in ETH-USD for USD
             }else{
-                orderDetails = {
-                    "client_order_id": "cbnode"+generateClientOrderId(),
-                    "product_id": String(this.name),
-                    "side": String(side),
-                    "order_configuration": {
-                        "market_market_ioc": {
-                            "quote_size": quote_size.toString(), // Quote is the value for buying ETH in ETH-USD with USD
-                        }
-                    }
-                };
+                orderDetails.order_configuration.market_market_ioc.quote_size = quote_size.toString(); // Quote is the value for buying ETH in ETH-USD with USD
             }
 
             // Confirm details of event
             console.log( "Order details: 💱💲 ", orderDetails );
-            client.submitOrder(orderDetails)
-                .then((response) => {
-                    console.log(response);
+            if ( !config.paperTrading ) {
+                client.submitOrder(orderDetails)
+                    .then((response) => {
+                        console.timeLog(response);
 
-                    // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
-                    if ( side === "BUY"){
+                        // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
+                        this.updateBalances(side, base_size, quote_size);
 
-                        // BOUGHT base units for quote
-                        accounts[this.baseName].acquisition += base_size; 
-                        accounts[this.quoteName].acquisition -= quote_size; 
-                    }else{ 
-
-                        // SOLD base units for quote
-                        accounts[this.baseName].acquisition -= base_size; 
-                        accounts[this.quoteName].acquisition += quote_size;
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }else{
+                
+                console.log ('Console Info');
+                console.timeLog ( 'You are now Paper-trading!' );
+                // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
+                this.updateBalances(side, base_size, quote_size);
+            }
             // Re-enable pair
             this.enable();
 
+        }
+
+        this.updateBalances = function(side, base_size, quote_size){
+            
+	      	// Register a loss and gain of each individual currency depending on if buy or sell...
+	      	if(side == "SELL"){
+	      		base_size = -base_size;
+	      		quote_size = quote_size * (1 - config.exchangeFee);
+  		    }else{
+  		    	base_size = base_size * (1 - config.exchangeFee);
+  		    	quote_size = -quote_size;
+  		    }
+
+  		    // Update global balances;
+  		    config.accounts[this.baseName].acquisition += base_size;
+  		    config.accounts[this.quoteName].acquisition += quote_size;
+
+  		    // Market data
+	      	this.spentBaseBalance += base_size;
+	      	this.spentQuoteBalance += quote_size;
         }
 
         this.clear = function(){

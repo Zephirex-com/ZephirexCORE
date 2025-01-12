@@ -1,6 +1,6 @@
 // Zephirex.js
 
-import { markets, report, accounts, config, matchDecimals, turnToUSD } from './config.js';
+import { markets, report, accounts, config, matchDecimals } from './config.js';
 
 function zephirex(a) {
     let numSegments = 9000;
@@ -46,7 +46,7 @@ function buy(pair, marketPair) {
 
     console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
-        console.log("Market trade conditions are met!");
+        // console.log("Market trade conditions are met!");
         marketPair.disable();
         // Trade condition has been met, transact now
         marketPair.submitOrder("BUY", readyValue / best_ask, readyValue); // Side, Base, Quote
@@ -75,7 +75,7 @@ function sell(pair, marketPair) {
 
     console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
-        console.log("Market trade conditions are met!");
+        // console.log("Market trade conditions are met!");
         marketPair.disable();
         // Trade condition has been met, transact now
         marketPair.submitOrder("SELL", (readyValue / best_bid), readyValue); // Side, Base, Quote

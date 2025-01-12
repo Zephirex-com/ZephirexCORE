@@ -16,9 +16,11 @@ export const accounts = {};
 export const price_data = {};
 
 export const config = {
+    paperTrading: true,
     xFactor: 3, // Risk factor 0 to 0.85 = less risk
     fee: 0.007,
     volumeDifferential: 1, // This is for use with TTVE
+    exchangeFee: .001,
 }
 
 export const report = {
