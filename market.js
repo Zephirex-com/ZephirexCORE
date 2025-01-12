@@ -79,13 +79,23 @@ export class market {
             client.submitOrder(orderDetails)
                 .then((response) => {
                     console.log(response);
+
+                    // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
+                    if ( side === "BUY"){
+
+                        // BOUGHT base units for quote
+                        accounts[this.baseName].acquisition += base_size; 
+                        accounts[this.quoteName].acquisition -= quote_size; 
+                    }else{ 
+
+                        // SOLD base units for quote
+                        accounts[this.baseName].acquisition -= base_size; 
+                        accounts[this.quoteName].acquisition += quote_size;
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-
-            // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
-            accounts[this.name].acquisition += 0; 
 
             // Re-enable pair
             this.enable();
@@ -97,6 +107,7 @@ export class market {
             this.tempLowestAsk = Infinity;
             this.highestBid = Infinity;
             this.tempHighestBid = -Infinity;
+            console.log(this.name, "has been cleared! ⛔⛔⛔")
         }
 
         this.report = function(){
