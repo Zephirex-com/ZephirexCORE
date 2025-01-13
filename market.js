@@ -38,7 +38,7 @@ export class market {
 
         this.submitOrder = function (side, base_size, quote_size){
 
-            // Temporarily disable pair to avoid double-trading
+            // Halt market from double-trading
             this.disable();
 
             // Submit request to process order
@@ -57,7 +57,7 @@ export class market {
                     "market_market_ioc": {}
                 }
             }
-            if(side === "SELL"){
+            if(side == "SELL"){
                 orderDetails.order_configuration.market_market_ioc.base_size = base_size.toString(); // Base is the quantity for selling ETH in ETH-USD for USD
             }else{
                 orderDetails.order_configuration.market_market_ioc.quote_size = quote_size.toString(); // Quote is the value for buying ETH in ETH-USD with USD
@@ -65,7 +65,7 @@ export class market {
 
             // Confirm details of event
             console.log( "Order details: 💱💲 ", orderDetails );
-            if ( !config.paperTrading ) {
+            if ( config.paperTrading == false ) {
                 client.submitOrder(orderDetails)
                     .then((response) => {
                         console.timeLog(response);
@@ -80,13 +80,11 @@ export class market {
             }else{
                 
                 console.log ('Console Info');
-                console.timeLog ( 'You are now Paper-trading!' );
+                console.log ( 'You are now Paper-trading!' );
                 // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
                 this.updateBalances(side, base_size, quote_size);
             }
-            // Re-enable pair
             this.enable();
-
         }
 
         this.updateBalances = function(side, base_size, quote_size){
@@ -101,8 +99,8 @@ export class market {
   		    }
 
   		    // Update global balances;
-  		    config.accounts[this.baseName].acquisition += base_size;
-  		    config.accounts[this.quoteName].acquisition += quote_size;
+  		    accounts[this.baseName].acquisition += base_size;
+  		    accounts[this.quoteName].acquisition += quote_size;
 
   		    // Market data
 	      	this.spentBaseBalance += base_size;

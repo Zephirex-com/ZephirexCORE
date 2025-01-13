@@ -40,14 +40,14 @@ function buy(pair, marketPair) {
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_ask * best_quantity;
 
-    // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
-    let readyValue = quote_size - accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
+    // Subtract spent units of balance stored globally -- (Add because the target value is in the negative if already bought);
+    let readyValue = quote_size + accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.quote_increment, readyValue)
 
     console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         // console.log("Market trade conditions are met!");
-        marketPair.disable();
+
         // Trade condition has been met, transact now
         marketPair.submitOrder("BUY", readyValue / best_ask, readyValue); // Side, Base, Quote
     }
@@ -69,14 +69,14 @@ function sell(pair, marketPair) {
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_bid * best_quantity;
 
-    // Subtract spent units of balance stored globally -- (Subtract because we want the ready value to be less than the base_size);
-    let readyValue = (base_size - accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
+    // Subtract spent units of balance stored globally -- (Add because the target value is in the negative if already sold);
+    let readyValue = (base_size + accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.base_increment, readyValue); // Ready to proper decimal count
 
     console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         // console.log("Market trade conditions are met!");
-        marketPair.disable();
+
         // Trade condition has been met, transact now
         marketPair.submitOrder("SELL", (readyValue / best_bid), readyValue); // Side, Base, Quote
     }

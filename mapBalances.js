@@ -15,6 +15,7 @@ import { marketPairs, accounts } from './config.js';
  * @param {Array} data - Raw data containing wallet information.
  */
 export const mapBalances = (data) => {
+  console.log("Mapping balances:", data);
 
   const cleanData = data.map(item => ({
     currency: item.currency,
