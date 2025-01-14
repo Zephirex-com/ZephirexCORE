@@ -32,7 +32,8 @@ function buy(pair, marketPair) {
 
     // Calculate, then ADD acquisition and must be in funds!!!
     const ratio = zephirex((best_ask / marketPair.lowestAsk)) * (1 - config.fee);
-    const available = Number.parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
+    let available = Number.parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.quoteName].acquisition);
+    if ( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Quote size for buying i.e. USD
     const quote_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
@@ -44,8 +45,8 @@ function buy(pair, marketPair) {
     let readyValue = quote_size + accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.quote_increment, readyValue)
 
-    console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
-    if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
+    console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_buy_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
+    if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_buy_funds) {
         // console.log("Market trade conditions are met!");
 
         // Trade condition has been met, transact now
@@ -62,6 +63,7 @@ function sell(pair, marketPair) {
     // Calculate, then ADD acquisition and must be in funds!!!
     const ratio = zephirex((marketPair.highestBid / best_bid)) * (1 - config.fee);
     const available = parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
+    if( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Base size for buying i.e. SHIB
     const base_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
@@ -73,8 +75,8 @@ function sell(pair, marketPair) {
     let readyValue = (base_size + accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.base_increment, readyValue); // Ready to proper decimal count
 
-    console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
-    if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
+    console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_sell_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
+    if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_sell_funds) {
         // console.log("Market trade conditions are met!");
 
         // Trade condition has been met, transact now

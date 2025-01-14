@@ -22,6 +22,8 @@ export class market {
         this.spentBaseBalance = 0;
         this.spentQuoteBalance = 0;
         this.min_market_funds = null;
+        this.min_sell_funds = null;
+        this.min_buy_funds = null;
         this.base_increment = null;
         this.quote_increment = 0.00000001;
         this.lowestAsk = -Infinity;
@@ -93,9 +95,21 @@ export class market {
 	      	if(side == "SELL"){
 	      		base_size = -base_size;
 	      		quote_size = quote_size * (1 - config.exchangeFee);
+                this.highestBid = this.best_bid.price_level; // Clear opposing side graph
+                this.tempHighestBid = this.best_bid.price_level;
+                // Increase min_sell_quote
+                this.min_sell_funds += quote_size;
+                // Clear min_buy_quote
+                this.min_buy_funds = this.min_market_funds;
   		    }else{
   		    	base_size = base_size * (1 - config.exchangeFee);
   		    	quote_size = -quote_size;
+                this.lowestAsk = this.best_bid.price_level; // Clear opposing side graph
+                this.tempLowestAsk = this.best_bid.price_level;
+                // Increase min_buy_quote
+                this.min_buy_funds -= quote_size; // Quote size here is in negative so let's increase the min_buy_funds
+                // Clear min_sell_quote
+                this.min_sell_funds = this.min_market_funds;
   		    }
 
   		    // Update global balances;
