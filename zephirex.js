@@ -2,11 +2,11 @@
 
 import { markets, report, accounts, config, matchDecimals } from './config.js';
 
-function zephirex(a) {
+function zephirex(a, b) {
     let numSegments = 9000;
-    let b = Math.PI;
+    b = b * Math.PI;
     a = a * Math.PI;
-    const dx = (b - a) / numSegments; // Width of each segment
+    const dx = (b - a) / numSegments;
     let area = 0;
   
     for (let i = 0; i < numSegments; i++) {
@@ -28,21 +28,21 @@ function zephirex(a) {
 function buy(pair, marketPair) {
     const best_ask = marketPair.best_ask.price_level;
     const best_quantity = marketPair.best_ask.new_quantity; // In BASE units
-    markets[pair].tempLowestAsk = best_ask;
+    marketPair.tempLowestAsk = best_ask;
 
     // Calculate, then ADD acquisition and must be in funds!!!
-    const ratio = zephirex((best_ask / marketPair.lowestAsk)) * (1 - config.fee);
-    let available = Number.parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.quoteName].acquisition);
+    const ratio = zephirex ( ( best_ask / marketPair.lowestAsk ), marketPair.lastBuyAsk / marketPair.lowestAsk ) * (1 - config.fee);
+    let available = parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.quoteName].acquisition);
     if ( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Quote size for buying i.e. USD
-    const quote_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
+    const quote_size = parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
 
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_ask * best_quantity;
 
     // Subtract spent units of balance stored globally -- (Add because the target value is in the negative if already bought);
-    let readyValue = quote_size + accounts[marketPair.quoteName].acquisition; // In QUOTE units!!
+    let readyValue = quote_size; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.quote_increment, readyValue)
 
     console.log("🔵", pair, "OMV: $", optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_buy_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
@@ -58,21 +58,21 @@ function buy(pair, marketPair) {
 function sell(pair, marketPair) {
     const best_bid = marketPair.best_bid.price_level;
     const best_quantity = marketPair.best_bid.new_quantity; // In BASE units
-    markets[pair].tempHighestBid = best_bid;
+    marketPair.tempHighestBid = best_bid;
 
     // Calculate, then ADD acquisition and must be in funds!!!
-    const ratio = zephirex((marketPair.highestBid / best_bid)) * (1 - config.fee);
-    const available = parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
+    const ratio = zephirex ( ( marketPair.highestBid / best_bid ), marketPair.highestBid / marketPair.lastSellBid ) * (1 - config.fee);
+    let available = parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
     if( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Base size for buying i.e. SHIB
-    const base_size = Number.parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
+    const base_size = parseFloat(ratio * available * config.xFactor * config.volumeDifferential);
 
     // OMV > RV > MMV == Execute trade now
     const optimalMarketValue = best_bid * best_quantity;
 
     // Subtract spent units of balance stored globally -- (Add because the target value is in the negative if already sold);
-    let readyValue = (base_size + accounts[marketPair.baseName].acquisition) * best_bid; // In QUOTE units!!
+    let readyValue = base_size * best_bid; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.base_increment, readyValue); // Ready to proper decimal count
 
     console.log("🔴", pair, "OMV: $",optimalMarketValue, "RV:", readyValue, "min:", marketPair.min_sell_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
@@ -93,14 +93,16 @@ export function tradeLogic(marketPair, best_ask, best_bid) {
         // Initialize lowestAsk and highestBid if not set
         if (marketPair.lowestAsk === -Infinity) {
             console.log("New price set:", pair, best_ask);
-            markets[pair].lowestAsk = best_ask;
-            markets[pair].tempLowestAsk = best_ask;
+            marketPair.lowestAsk = best_ask;
+            marketPair.tempLowestAsk = best_ask;
+            marketPair.lastBuyAsk = best_ask;
         }
 
         if (marketPair.highestBid === Infinity) {
             console.log("New price set:", pair, best_bid);
-            markets[pair].highestBid = best_bid;
-            markets[pair].tempHighestBid = best_bid;
+            marketPair.highestBid = best_bid;
+            marketPair.tempHighestBid = best_bid;
+            marketPair.lastSellBid = best_bid;
         }
 
         // Sell condition: Bidding price goes up
@@ -112,17 +114,21 @@ export function tradeLogic(marketPair, best_ask, best_bid) {
 
         // Sell condition changes: Bidding price goes down
         if (best_bid < markets[pair].highestBid) {
+            if( marketPair.lastSellBid == marketPair.highestBid ) { marketPair.lastSellBid = best_bid; }
             markets[pair].highestBid = best_bid;
-            console.log("📉: ", pair);
+            // console.log("📉: ", pair);
         }
 
-        // Buy condition changes: Asking price goes up
+
+
+        // Buy condition changes: Asking price goes up [ Upper BUY Limit ]
         if (best_ask > markets[pair].lowestAsk) {
+            if ( marketPair.lastBuyAsk == marketPair.lowestAsk ) { marketPair.lastBuyAsk = best_ask; } // Set b & c values
             markets[pair].lowestAsk = best_ask;
-            console.log("📈: ", pair);
+            // console.log("📈: ", pair);
         }
 
-        // Buy condition: Asking price goes down
+        // Buy condition: Asking price goes down [ Lower Buy Limit ]
         if (best_ask < markets[pair].tempLowestAsk) {
             // Initiate buy operation
             // console.log("BUY: ", marketPair);

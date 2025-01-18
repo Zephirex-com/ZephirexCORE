@@ -81,7 +81,6 @@ export class market {
                     });
             }else{
                 
-                console.log ('Console Info');
                 console.log ( 'You are now Paper-trading!' );
                 // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
                 this.updateBalances(side, base_size, quote_size);
@@ -95,8 +94,11 @@ export class market {
 	      	if(side == "SELL"){
 	      		base_size = -base_size;
 	      		quote_size = quote_size * (1 - config.exchangeFee);
-                this.highestBid = this.best_bid.price_level; // Clear opposing side graph
+                // Upper buy limit wont matter so no need to change lowestAsk
+                //What matters is to store the tempHighestBid and lastSellBid as the same as the price has dropped
                 this.tempHighestBid = this.best_bid.price_level;
+                this.lastSellBid = this.tempHighestBid;
+                // this.lowestAsk = this.best_ask.price_level; // Clear opposing side graph
                 // Increase min_sell_quote
                 this.min_sell_funds += quote_size;
                 // Clear min_buy_quote
@@ -104,8 +106,11 @@ export class market {
   		    }else{
   		    	base_size = base_size * (1 - config.exchangeFee);
   		    	quote_size = -quote_size;
-                this.lowestAsk = this.best_bid.price_level; // Clear opposing side graph
-                this.tempLowestAsk = this.best_bid.price_level;
+                // Lower sell limit won't matter so no need to change highestBid
+                // What matters is to store the tempLowestAsk and lastBuyAsk as the same as the price has dropped
+                this.tempLowestAsk = this.best_ask.price_level;
+                this.lastBuyAsk = this.tempLowestAsk;
+                // this.highestBid = this.best_bid.price_level; // Clear opposing side graph
                 // Increase min_buy_quote
                 this.min_buy_funds -= quote_size; // Quote size here is in negative so let's increase the min_buy_funds
                 // Clear min_sell_quote
