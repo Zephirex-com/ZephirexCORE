@@ -122,7 +122,7 @@ const websocket = new WebsocketClient({
   
   // market data
 
-  //websocket.subscribe('heartbeats', 'advTradeMarketData');
+  websocket.subscribe('heartbeats', 'advTradeMarketData');
   
   // This is the same as above, but using WS_KEY_MAP like an enum to reduce any uncertainty on what value to use:
   // client.subscribe('heartbeats', WS_KEY_MAP.advTradeMarketData);

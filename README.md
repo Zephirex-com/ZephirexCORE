@@ -1,12 +1,125 @@
-## ZephirexCORE v5.0
+# ZephirexCORE v5.0
 
-Description: Automated trading algorithm for use in the Coinbase Advanced Trading platform, this software is designed to equalize your portfolio, as markets change so will your portfolio, there always is a risk involved in trading and investing so please do your own research before trading aggressively.
+Welcome to the repository for **ZephirexCORE v5.0**, our **NodeJS-based automated trading algorithm**. This project is designed to streamline cryptocurrency trading by connecting directly with the Coinbase Advanced Trade API. The algorithm extracts real-time market data, applies trading strategies, and executes trades automatically.
 
-### Install
+---
 
-You want to use this git and install into your Node.js environment. NPM implementation will come soon.
+## Features
 
-### Dependencies
+- **Real-Time Data Retrieval**: Fetches live market information for cryptocurrency pairs such as BTC-USD, ETH-BTC, SHIB-USD, and others.
+- **Automated Trading**: Implements predefined strategies to execute buy and sell orders.
+- **Customizable Strategies**: Configure parameters like trading pairs, order size, and risk tolerance.
+- **Secure and Efficient**: Built with robust error handling and secure API integration.
+- **Comprehensive Logging**: Tracks trading activity and system performance.
 
-- https://github.com/tiagosiebler/coinbase-api/
-- That's about it, you'll need your advanced trading API keys from Coinbase
+---
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v14 or higher recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- A [Coinbase Advanced Trade API Key](https://www.coinbase.com/)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/repository-name.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd repository-name
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Install the required dependency for API integration:
+   ```bash
+   npm install tiagosiebler/coinbase-api
+   ```
+
+### Configuration
+
+1. Create a `.env` file in the root directory:
+   ```env
+   COINBASE_API_KEY=your_api_key_here
+   COINBASE_API_SECRET=your_api_secret_here
+   COINBASE_API_PASSPHRASE=your_passphrase_here
+   BASE_CURRENCY=BTC
+   QUOTE_CURRENCY=USD
+   ```
+
+2. Update the configuration settings in `config.json` as needed:
+   ```json
+   {
+     "tradePair": "BTC-USD",
+     "orderSize": 0.01,
+     "strategy": "momentum"
+   }
+   ```
+
+### Running the Application
+
+Start the application with:
+```bash
+npm start
+```
+
+---
+
+## Usage
+
+- **Strategy Management**: Modify the strategy parameters in the configuration file to suit your trading goals.
+- **Logging**: Logs are stored in the `logs` directory for monitoring and debugging.
+- **Error Handling**: The system captures and logs API errors to prevent disruptions.
+
+---
+
+## Contributing
+
+We welcome contributions to enhance the functionality of this project. Here’s how you can help:
+
+1. Fork the repository.
+2. Create a new feature branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push the branch:
+   ```bash
+   git push origin feature-name
+   ```
+5. Open a pull request.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Disclaimer
+
+This software is provided "as is," without warranty of any kind, express or implied. Trading cryptocurrencies involves significant risk. Use this software at your own risk.
+
+---
+
+## Contact
+
+For questions or feedback, feel free to open an issue or reach out:
+
+- **Email**: info@zephirex.com
+- **GitHub Issues**: [Issues Page](https://github.com/yourusername/repository-name/issues)
+

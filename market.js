@@ -102,7 +102,6 @@ export class market {
                 // Increase min_sell_quote
                 this.min_sell_funds += quote_size;
                 // Clear min_buy_quote
-                this.min_buy_funds = this.min_market_funds;
   		    }else{
   		    	base_size = base_size * (1 - config.exchangeFee);
   		    	quote_size = -quote_size;
@@ -114,7 +113,6 @@ export class market {
                 // Increase min_buy_quote
                 this.min_buy_funds -= quote_size; // Quote size here is in negative so let's increase the min_buy_funds
                 // Clear min_sell_quote
-                this.min_sell_funds = this.min_market_funds;
   		    }
 
   		    // Update global balances;

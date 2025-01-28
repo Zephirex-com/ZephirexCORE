@@ -11,8 +11,6 @@ export function checkMarketStatus(data){
     // If market pair object exists, then assign min_market_funds to it.
     //console.log("Increments: " , pair, data)
     markets[pair] && ( markets[pair].min_market_funds = data.min_market_funds );
-    markets[pair] && ( markets[pair].min_buy_funds = data.min_market_funds );
-    markets[pair] && ( markets[pair].min_sell_funds = data.min_market_funds );
     markets[pair] && ( markets[pair].base_increment = data.base_increment );
     markets[pair] && ( markets[pair].quote_increment = data.quote_increment );
 }
