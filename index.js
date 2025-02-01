@@ -88,12 +88,12 @@ const websocket = new WebsocketClient({
   
   // Something happened, attempting to reconenct
   websocket.on('reconnect', (data) => {
-    console.log('reconnect: ', data);
+    // console.log('reconnect: ', data);
   });
   
   // Reconnect successful
   websocket.on('reconnected', (data) => {
-    console.log('reconnected: ', data);
+    // console.log('reconnected: ', data);
   });
   
   // Connection closed. If unexpected, expect reconnect -> reconnected.
