@@ -1,6 +1,16 @@
 // Zephirex.js
 
-import { markets, report, accounts, config, matchDecimals } from './config.js';
+import { markets, report, accounts, config, matchDecimals, marketPairs } from './config.js';
+
+// Function to count pairs that start with a specific currency
+const countStartsWith = (pairs, currency) => {
+    return pairs.filter(pair => pair.startsWith(`${currency}-`)).length;
+};
+
+// Function to count pairs that end with a specific currency
+const countEndsWith = (pairs, currency) => {
+    return pairs.filter(pair => pair.endsWith(`-${currency}`)).length;
+};
 
 function zephirex(a, b) {
     let numSegments = 9000;
@@ -32,7 +42,11 @@ function buy(pair, marketPair) {
 
     // Calculate, then ADD acquisition and must be in funds!!!
     const ratio = zephirex ( ( best_ask / marketPair.lowestAsk ), marketPair.lastBuyAsk / marketPair.lowestAsk ) * (1 - config.fee);
-    let available = parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.quoteName].acquisition);
+
+    // Count the number of markets buying with this quote currency to divide Available by.
+    let marketsInUse = countEndsWith(marketPairs, marketPair.quoteName);
+
+    let available = (parseFloat(accounts[marketPair.quoteName].available) + parseFloat(accounts[marketPair.quoteName].acquisition)) / marketsInUse;
     if ( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Quote size for buying i.e. USD
@@ -62,7 +76,11 @@ function sell(pair, marketPair) {
 
     // Calculate, then ADD acquisition and must be in funds!!!
     const ratio = zephirex ( ( marketPair.highestBid / best_bid ), marketPair.highestBid / marketPair.lastSellBid ) * (1 - config.fee);
-    let available = parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition);
+    
+    // Count the number of markets selling with this base currency to divide Available by.
+    let marketsInUse = countStartsWith( marketPairs, marketPair.baseName );
+
+    let available = (parseFloat(accounts[marketPair.baseName].available) + parseFloat(accounts[marketPair.baseName].acquisition)) / marketsInUse;
     if( available < 0 ) { available = 0 }; // Available cannot be < 0; Should not be < 0 ever.
 
     // Define Base size for buying i.e. SHIB

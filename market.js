@@ -1,10 +1,11 @@
 // market.js
 
 import { client } from './coinbase-library.js';
-import { config, accounts, price_data, markets } from './config.js';
+import { config, accounts, price_data, markets, report } from './config.js';
+import { turnToUSD } from './turnToUSD.js';
 
 function plaggregate(marketsData){ // IN USD!
-	config.report.profitLoss = 0; // Reset P/L down to 0
+	report.profitLoss = 0; // Reset P/L down to 0
 	for (let market in marketsData){
 		if (marketsData.hasOwnProperty(market)){
             
@@ -16,7 +17,7 @@ function plaggregate(marketsData){ // IN USD!
 			}
 			// Take profits as net amount and multiply all by price_data bid OR ask
 			let profitLoss = Number.parseFloat(marketsData[market]["profitLoss"]);
-			config.report.profitLoss += profitLoss * (profitLoss > 0 ? Number.parseFloat(config.price_data[marketsData[market]["baseName_USD"]].bid) : Number.parseFloat(config.price_data[marketsData[market]["baseName_USD"]].ask));
+			report.profitLoss += profitLoss * (profitLoss > 0 ? Number.parseFloat(price_data[marketsData[market]["quoteName_USD"]].bid) : Number.parseFloat(price_data[marketsData[market]["quoteName_USD"]].ask));
 		}
 	}
 }
@@ -140,6 +141,9 @@ export class market {
   		    // Market data
 	      	this.spentBaseBalance += base_size;
 	      	this.spentQuoteBalance += quote_size;
+
+
+            console.log( "Accounts: ", report.accounts );
         }
 
         this.clear = function(){
@@ -152,7 +156,7 @@ export class market {
 
         this.report = function(){
 
-            console.log( "Start report: ", this.name );
+            // console.log( "Start report: ", this.name );
             /*
             
             This function updates to config.report from the local object attributes internally.
@@ -160,8 +164,8 @@ export class market {
             */
             // Need to reference appropriate marketPair to obtain highest bid or ask for respective conversion to USD.
             
-            let currentValue = this.spentBaseBalance * (this.spentBaseBalance >= 0 ? this.best_bid : this.best_ask) * (1-config.exchangeFee); // Account for fee, this is Base qty * best bid - fee, Note: If negative we need to * best_ask
-            this.profitLoss = Number.parseFloat(currentValue) + Number.parseFloat(this.spentBaseBalance); // In quote value
+            let currentValue = this.spentBaseBalance * (this.spentBaseBalance >= 0 ? this.best_bid.price_level : this.best_ask.price_level) * (1-config.exchangeFee); // Account for fee, this is Base qty * best bid - fee, Note: If negative we need to * best_ask
+            this.profitLoss = Number.parseFloat(currentValue) + Number.parseFloat(this.spentQuoteBalance); // In quote value
     
             if ( this.best_bid === undefined ){
                 this.quote_to_usd = undefined;
@@ -186,10 +190,9 @@ export class market {
             // Populate report data initialized in Assembler.js
     
             // NOTE: This reporting is only an approximation given the best Ask/Bid prices and not taking into account the actual market value as a whole.
-            config.report.markets[this.name] = {
-                currentValue: currentValue + " " + this.baseName,
+            report.accounts[this.name] = {
+                currentValue: currentValue + " " + this.quoteName,
                 profitLoss: this.profitLoss,
-                Quote_to_usd: this.quote_to_usd, // Check
                 USDpl: this.USDpl + " USD",
                 spentBase: this.spentBaseBalance + " " + this.baseName,
                 spentQuote: this.spentQuoteBalance + " " + this.quoteName,
@@ -197,7 +200,7 @@ export class market {
                 ROI: ROI.toFixed(3) + "%",
             }
     
-            if (config.report.volume != 0) {plaggregate(markets);}
+            // if (report.volume != 0) {plaggregate(markets);}
     
             // // Account P/L in USD for config.report
     

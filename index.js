@@ -1,7 +1,7 @@
 // index.js
 
 import { WebsocketClient } from 'coinbase-api';
-import { marketPairs, markets, price_data } from './config.js';
+import { marketPairs, markets, price_data, extras } from './config.js';
 import { assembler } from './assembler.js';
 import { advancedTradeCdpAPIKey } from './coinbase-library.js';
 import { mapBalances } from './mapBalances.js';
@@ -134,6 +134,7 @@ const websocket = new WebsocketClient({
   /**
    * Or send a more structured object with parameters, e.g. if parameters are required
    */
+  let products = Array.from(new Set([...extras, ...marketPairs])); // Combine pairs and extras into a single list.
   const tickerSubscribeRequest = {
     topic: 'ticker',
     /**
@@ -141,7 +142,7 @@ const websocket = new WebsocketClient({
      * allowing you to send misc parameters supported by the exchange (such as `product_ids: string[]`)
      */
     payload: {
-      product_ids: marketPairs,
+      product_ids: products,
     },
   };
   websocket.subscribe(tickerSubscribeRequest, 'advTradeMarketData');
