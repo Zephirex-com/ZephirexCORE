@@ -50,8 +50,8 @@ Ensure you have the following installed:
 
 1. Create a `.env` file in the root directory:
    ```env
-   ADVANCED_TRADE_CDP_KEY_NAME=organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/02cc536f-3bf5-411c-94b6-f5df6ea7277f
-   ADVANCED_TRADE_CDP_KEY_PRIVATE=-----BEGIN EC PRIVATE KEY-----
+   ADVANCED_TRADE_CDP_KEY_NAME=organizations/...
+   ADVANCED_TRADE_CDP_KEY_PRIVATE=-----BEGIN EC PRIVATE KEY-----...
    ```
 
 2. Update the configuration settings in `config.json` as needed:
