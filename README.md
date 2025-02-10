@@ -28,12 +28,12 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/repository-name.git
+   git clone https://github.com/zephirex-com/ZephirexCORE.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd repository-name
+   cd ZephirexCORE
    ```
 
 3. Install dependencies:
@@ -50,11 +50,8 @@ Ensure you have the following installed:
 
 1. Create a `.env` file in the root directory:
    ```env
-   COINBASE_API_KEY=your_api_key_here
-   COINBASE_API_SECRET=your_api_secret_here
-   COINBASE_API_PASSPHRASE=your_passphrase_here
-   BASE_CURRENCY=BTC
-   QUOTE_CURRENCY=USD
+   ADVANCED_TRADE_CDP_KEY_NAME=organizations/876bc90b-c3ad-4058-baed-d90c941215e8/apiKeys/02cc536f-3bf5-411c-94b6-f5df6ea7277f
+   ADVANCED_TRADE_CDP_KEY_PRIVATE=-----BEGIN EC PRIVATE KEY-----
    ```
 
 2. Update the configuration settings in `config.json` as needed:
