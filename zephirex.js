@@ -59,7 +59,7 @@ function buy(pair, marketPair) {
     let readyValue = quote_size - marketPair.min_buy_funds; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.quote_increment, readyValue)
 
-    console.log("Buy: ", pair, "Price:", best_ask, "OMV: $", optimalMarketValue, "xFactor: ", config.xFactor, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
+    console.log("Buy: ", pair, "Price:", best_ask, "OMV: $", optimalMarketValue, "xFactor:", config.xFactor, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         // console.log("Market trade conditions are met!");
 
@@ -93,7 +93,7 @@ function sell(pair, marketPair) {
     let readyValue = (base_size * best_bid) - marketPair.min_sell_funds; // In QUOTE units!!
     readyValue = matchDecimals(marketPair.base_increment, readyValue); // Ready to proper decimal count
 
-    console.log("Sell: ", pair, "Price:", best_bid, "OMV: $",optimalMarketValue, "xFactor: ", config.xFactor, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
+    console.log("Sell: ", pair, "Price:", best_bid, "OMV: $",optimalMarketValue, "xFactor:", config.xFactor, "RV:", readyValue, "min:", marketPair.min_market_funds, "qte:", marketPair.quoteName, "prox:", ((readyValue / marketPair.min_market_funds) * 100).toFixed(8),"%"); // All in quote units!
     if (optimalMarketValue >= readyValue && readyValue >= marketPair.min_market_funds) {
         // console.log("Market trade conditions are met!");
 
