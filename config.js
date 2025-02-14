@@ -25,7 +25,7 @@ export const price_data = { // Initialize price data
 };
 
 export const config = {
-    paperTrading: true,
+    paperTrading: true, // Basically stops real orders from being submitted into Coinbase while keeping approximate records of balances.
     xFactor: process.env.XFACTOR || 1, // Risk factor 0 to 0.85 = less risk
     fee: 0.008,
     volumeDifferential: 1, // This is for use with TTVE
