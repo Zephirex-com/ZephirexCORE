@@ -54,15 +54,6 @@ Ensure you have the following installed:
    ADVANCED_TRADE_CDP_KEY_PRIVATE=-----BEGIN EC PRIVATE KEY-----...
    ```
 
-2. Update the configuration settings in `config.json` as needed:
-   ```json
-   {
-     "tradePair": "BTC-USD",
-     "orderSize": 0.01,
-     "strategy": "momentum"
-   }
-   ```
-
 ### Running the Application
 
 Start the application with:
