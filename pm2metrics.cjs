@@ -1,9 +1,11 @@
 const io = require('@pm2/io')
 
-const pm2metrics = io.metric({
-  name: 'USDpl',
-})
+function pm2metrics ( x , y ){
+  const container = io.metric({
+    name: x,
+  })
 
-pm2metrics.set(19);
+  container.set( y );
+}
 
 module.exports = pm2metrics;
