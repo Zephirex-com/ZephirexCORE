@@ -86,6 +86,7 @@ export class market {
             // Confirm details of event
             console.log( "Order details: 💱💲 ", orderDetails );
             if ( config.paperTrading == false ) {
+                pm2metrics("Status", "LIVE");
                 client.submitOrder(orderDetails)
                     .then((response) => {
                         console.timeLog(response);
@@ -98,7 +99,7 @@ export class market {
                         console.error(error);
                     });
             }else{
-                
+                pm2metrics("Status", "Paper-trading");
                 console.log ( 'You are now Paper-trading!' );
                 // Update balances accordingly <---------------------- Must update!!!! Use response from platform to update accordingly
                 this.updateBalances(side, base_size, quote_size);
