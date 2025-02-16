@@ -3,17 +3,18 @@
 import { client } from './coinbase-library.js';
 import { config, accounts, price_data, markets, report } from './config.js';
 import { turnToUSD } from './turnToUSD.js';
+import pm2metrics from './pm2metrics.cjs';
 
 function plaggregate(marketsData){ // IN USD!
 	report.profitLoss = 0; // Reset P/L down to 0
 	for (let market in marketsData){
 		if (marketsData.hasOwnProperty(market)){
             
-            // If basename_USD not defined; define now 
-			if( price_data[marketsData[market]['baseName_USD']] !== undefined ){
-				markets[market].base_to_usd = price_data[marketsData[market]['baseName_USD']].bid;
+            // If quoteName_USD not defined; define now
+			if( price_data[marketsData[market]['quoteName_USD']] !== undefined ){
+				markets[market].base_to_usd = price_data[marketsData[market]['quoteName_USD']].bid;
 			}else{
-				console.log("This best_bid is undefined", marketsData[market]['baseName_USD'])
+				console.log("This best_bid is undefined", marketsData[market]['quoteName_USD'])
 			}
 			// Take profits as net amount and multiply all by price_data bid OR ask
 			let profitLoss = Number.parseFloat(marketsData[market]["profitLoss"]);
@@ -155,6 +156,8 @@ export class market {
         }
 
         this.report = function(){
+
+            pm2metrics;
 
             // console.log( "Start report: ", this.name );
             /*
