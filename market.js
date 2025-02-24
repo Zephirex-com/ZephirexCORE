@@ -5,16 +5,12 @@ import { config, accounts, markets, report } from './config.js';
 import { turnToUSD } from './turnToUSD.js';
 import pm2metrics from './pm2metrics.cjs';
 
-function plaggregate(){ // IN USD!
+function plaggregate(markets){ // IN USD!
 
 	report.profitLoss = 0; // Reset P/L down to 0
     
 	for (let market in markets){
-		if (markets.hasOwnProperty(market)){
-            
-            report.profitLoss += market.USDpl;
-
-		}
+        report.profitLoss += market.USDpl;
 	}
 
     pm2metrics( "Profit/Loss (USD)", report.profitLoss);
@@ -200,7 +196,7 @@ export class market {
                 ROI: ROI.toFixed(3) + "%",
             }
 
-            plaggregate();
+            plaggregate(markets);
     
             // // Account P/L in USD for config.report
     
