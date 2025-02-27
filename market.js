@@ -5,18 +5,6 @@ import { config, accounts, markets, report } from './config.js';
 import { turnToUSD } from './turnToUSD.js';
 import pm2metrics from './pm2metrics.cjs';
 
-function plaggregate(markets){ // IN USD!
-
-	report.profitLoss = 0; // Reset P/L down to 0
-    
-	for (let market in markets){
-        report.profitLoss += market.USDpl;
-	}
-    console.log( report.profitLoss );
-    pm2metrics( "Profit/Loss (USD)", report.profitLoss );
-
-}
-
 export class market {
     constructor(baseName, quoteName){
 

@@ -154,7 +154,7 @@ export function tradeLogic(marketPair, best_ask, best_bid) {
         }
 
         // Update report for this market
-        markets[pair].report();
+        marketPair.report();
         report.accounts = accounts;
 
     } else {
