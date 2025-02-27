@@ -2,7 +2,6 @@
 
 import { client } from './coinbase-library.js';
 import { config, accounts, markets, report } from './config.js';
-import { turnToUSD } from './turnToUSD.js';
 import pm2metrics from './pm2metrics.cjs';
 
 export class market {
@@ -161,7 +160,7 @@ export class market {
             };
     
             // Convert in real-time quote profits to USD
-            this.USDpl = turnToUSD(this.quoteName, this.profitLoss);
+            this.USDpl = price_data[this.quoteName_USD].bid;
     
             /*
     
