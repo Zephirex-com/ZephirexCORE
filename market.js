@@ -1,7 +1,7 @@
 // market.js
 
 import { client } from './coinbase-library.js';
-import { config, accounts, markets, report } from './config.js';
+import { config, accounts, markets, report, price_data } from './config.js';
 import pm2metrics from './pm2metrics.cjs';
 
 export class market {

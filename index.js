@@ -6,7 +6,7 @@ import { assembler } from './assembler.js';
 import { advancedTradeCdpAPIKey } from './coinbase-library.js';
 import { mapBalances } from './mapBalances.js';
 import { getBalances } from './getBalances.js';
-import { checkMarketStatus } from './checkMarkteStatus.js';
+import { checkMarketStatus } from './checkMarketStatus.js';
 import { tradeLogic } from './zephirex.js';
 
 const balances = await getBalances({limit:100});
