@@ -190,7 +190,7 @@ export class market {
             for (let market in markets){
                 report.profitLoss += market.USDpl;
             }
-            console.log( report.profitLoss );
+            //console.log( report.profitLoss );
             pm2metrics( "USD P&L", report.profitLoss );
     
             // // Account P/L in USD for config.report

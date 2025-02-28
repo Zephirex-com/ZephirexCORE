@@ -1,6 +1,6 @@
 // Zephirex.js
 
-import { markets, report, accounts, config, matchDecimals, marketPairs } from './config.js';
+import { markets, report, accounts, config, matchDecimals, marketPairs, price_data } from './config.js';
 
 // Function to count pairs that start with a specific currency
 const countStartsWith = (pairs, currency) => {
@@ -154,6 +154,7 @@ export function tradeLogic(marketPair, best_ask, best_bid) {
         }
 
         // Update report for this market
+        console.log(price_data);
         marketPair.report();
         report.accounts = accounts;
 
