@@ -154,7 +154,7 @@ export function tradeLogic(marketPair, best_ask, best_bid) {
         }
 
         // Update report for this market
-        console.log(price_data);
+        // console.log(price_data);
         marketPair.report();
         report.accounts = accounts;
 

@@ -149,7 +149,7 @@ export class market {
             
             let currentValue = this.spentBaseBalance * (this.spentBaseBalance >= 0 ? this.best_bid.price_level : this.best_ask.price_level) * (1-config.exchangeFee); // Account for fee, this is Base qty * best bid - fee, Note: If negative we need to * best_ask
             this.profitLoss = Number.parseFloat(currentValue) + Number.parseFloat(this.spentQuoteBalance); // In quote value
-            this.USDpl = this.profitLoss * price_data[this.quoteName_USD].bid
+            this.USDpl = this.profitLoss * price_data[this.quoteName_USD].bid;
     
             if ( this.best_bid === undefined ){
                 this.quote_to_usd = undefined;
@@ -194,12 +194,12 @@ export class market {
             for (let instance in report.overview){
                 let market = report.overview[instance]
                 if ( !Number.isNaN ( market.USDpl ) ){
-                    console.log ( "Market: ", market);
+                    // console.log ( "Market: ", market);
                     report.profitLoss += market.USDpl;
-                    console.log ( instance, " USDpl:", market.USDpl)
+                    // console.log ( instance, " USDpl:", market.USDpl)
                 }
             }
-            console.log( "USD P&L", report.profitLoss );
+            // console.log( "USD P&L", report.profitLoss );
             pm2metrics( "USD P&L", report.profitLoss );
     
             // // Account P/L in USD for config.report
