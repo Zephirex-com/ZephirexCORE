@@ -4,11 +4,11 @@ export const marketPairs = [
     "SHIB-USD",
     "BTC-USD",
     "ETH-USD",
-    "ETH-BTC",
     "DASH-USD",
     "LTC-USD",
+    "UNI-USD",
     "LTC-BTC",
-    "UNI-USD"
+    "ETH-BTC",
 ];
 
 export const extras = [];
@@ -34,6 +34,7 @@ export const config = {
 
 export const report = {
     "accounts": {},
+    "overview": {},
 };
 
 export function matchDecimals(format, value){

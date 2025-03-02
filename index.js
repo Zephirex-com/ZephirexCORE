@@ -13,6 +13,7 @@ const balances = await getBalances({limit:100});
 console.log("Balances: ", balances);
 
 // Map the balances to the Global accounts variable in ./config.js
+//console.log(balances);
 mapBalances(balances.accounts);
 
 // Assemble pairs

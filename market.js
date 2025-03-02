@@ -1,7 +1,7 @@
 // market.js
 
 import { client } from './coinbase-library.js';
-import { config, accounts, markets, report, price_data } from './config.js';
+import { config, accounts, report, price_data } from './config.js';
 import pm2metrics from './pm2metrics.cjs';
 
 export class market {
@@ -149,6 +149,7 @@ export class market {
             
             let currentValue = this.spentBaseBalance * (this.spentBaseBalance >= 0 ? this.best_bid.price_level : this.best_ask.price_level) * (1-config.exchangeFee); // Account for fee, this is Base qty * best bid - fee, Note: If negative we need to * best_ask
             this.profitLoss = Number.parseFloat(currentValue) + Number.parseFloat(this.spentQuoteBalance); // In quote value
+            this.USDpl = this.profitLoss * price_data[this.quoteName_USD].bid
     
             if ( this.best_bid === undefined ){
                 this.quote_to_usd = undefined;
@@ -160,8 +161,11 @@ export class market {
             };
     
             // Convert in real-time quote profits to USD
-            this.USDpl = price_data[this.quoteName_USD].bid;
-    
+            if(this.spentBaseBalance > 0){
+                this.USDpl = Number.parseFloat( price_data[this.quoteName_USD].bid ) * this.spentBaseBalance;
+            } else {
+                this.USDpl = Number.parseFloat( price_data[this.quoteName_USD].ask ) * this.spentBaseBalance;
+            }
             /*
     
             Return on Investment = Net gain/loss / Cost basis
@@ -173,10 +177,10 @@ export class market {
             // Populate report data initialized in Assembler.js
     
             // NOTE: This reporting is only an approximation given the best Ask/Bid prices and not taking into account the actual market value as a whole.
-            report.accounts[this.name] = {
+            report.overview[this.name] = {
                 currentValue: currentValue + " " + this.quoteName,
                 profitLoss: this.profitLoss,
-                USDpl: this.USDpl + " USD",
+                USDpl: this.USDpl,
                 spentBase: this.spentBaseBalance + " " + this.baseName,
                 spentQuote: this.spentQuoteBalance + " " + this.quoteName,
                 volume: this.volume + " " + this.quoteName,
@@ -187,10 +191,15 @@ export class market {
 
             report.profitLoss = 0; // Reset P/L down to 0
             
-            for (let market in markets){
-                report.profitLoss += market.USDpl;
+            for (let instance in report.overview){
+                let market = report.overview[instance]
+                if ( !Number.isNaN ( market.USDpl ) ){
+                    console.log ( "Market: ", market);
+                    report.profitLoss += market.USDpl;
+                    console.log ( instance, " USDpl:", market.USDpl)
+                }
             }
-            //console.log( report.profitLoss );
+            console.log( "USD P&L", report.profitLoss );
             pm2metrics( "USD P&L", report.profitLoss );
     
             // // Account P/L in USD for config.report
